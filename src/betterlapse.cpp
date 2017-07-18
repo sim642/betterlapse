@@ -39,6 +39,7 @@ int main()
 
     
     cv::Size size = cv::imread(imagePaths.front().string()).size();
+    size = cropRect.size();
 
     vector<cv::Mat> frames;
 
@@ -52,14 +53,14 @@ int main()
 
         cout << "Averaging, " << "Frame: " << frameI << ", Image: " << frameImage << endl;
 
-        cv::Mat image = cv::imread(imagePaths[frameImage].string());
+        cv::Mat image = cv::imread(imagePaths[frameImage].string())(cropRect);
 
         cv::Mat nextSum(size, CV_32SC3, cv::Scalar::all(0));
         size_t nextCount = 0;
         for (size_t imageI = frameImage + 1; imageI < nextFrameImage; imageI++)
         {
             //cout << "  " << "Next image: " << imageI << endl;
-            cv::Mat nextImage = cv::imread(imagePaths[imageI].string());
+            cv::Mat nextImage = cv::imread(imagePaths[imageI].string())(cropRect);
             cv::add(nextSum, nextImage, nextSum, cv::noArray(), CV_32SC3);
             nextCount++;
         }
@@ -78,8 +79,8 @@ int main()
 
     UnsharpMaskTransformer().transform(frames);
     WhiteBalanceTransformer().transform(frames);
-    CropTransformer(cropRect).transform(frames);
-    size = cropRect.size();
+    //CropTransformer(cropRect).transform(frames);
+    //size = cropRect.size();
 
     cout << "Writing" << endl;
     cv::VideoWriter videoWriter(videoPath.string(), videoFourCC, fps, size);
