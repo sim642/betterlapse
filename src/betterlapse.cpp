@@ -4,8 +4,8 @@
 #include <algorithm>
 #include <iterator>
 #include <opencv2/opencv.hpp>
-#include <opencv2/xphoto.hpp>
 #include <cmath>
+#include "WhiteBalanceTransformer.hpp"
 
 using namespace std;
 namespace fs = boost::filesystem;
@@ -72,14 +72,7 @@ int main()
         prevCount = nextCount;
     }
 
-    for (size_t frameI = 0; frameI < frameCount; frameI++)
-    {
-        cout << "White balancing, " << "Frame " << frameI << endl;
-        cv::Mat &frame = frames[frameI];
-
-        cv::Ptr<cv::xphoto::SimpleWB> whiteBalance = cv::xphoto::createSimpleWB();
-        whiteBalance->balanceWhite(frame, frame);
-    }
+    WhiteBalanceTransformer().transform(frames);
 
     cout << "Writing" << endl;
     cv::VideoWriter videoWriter(videoPath.string(), videoFourCC, fps, size);
