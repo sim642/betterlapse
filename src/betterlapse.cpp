@@ -7,6 +7,7 @@
 #include <cmath>
 #include "WhiteBalanceTransformer.hpp"
 #include "UnsharpMaskTransformer.hpp"
+#include "CropTransformer.hpp"
 
 using namespace std;
 namespace fs = boost::filesystem;
@@ -16,6 +17,8 @@ int main()
     const double seconds = 15.0;
     const double fps = 30.0;
     const size_t frameCount = round(seconds * fps);
+
+    const cv::Rect cropRect(cv::Point(140, 19), cv::Size(410, 410));
 
     const fs::path imagesPath("./tl2/");
     const fs::path framesPath("./frames/");
@@ -35,7 +38,7 @@ int main()
     }
 
     
-    const cv::Size size = cv::imread(imagePaths.front().string()).size();
+    cv::Size size = cv::imread(imagePaths.front().string()).size();
 
     vector<cv::Mat> frames;
 
@@ -75,6 +78,8 @@ int main()
 
     UnsharpMaskTransformer().transform(frames);
     WhiteBalanceTransformer().transform(frames);
+    CropTransformer(cropRect).transform(frames);
+    size = cropRect.size();
 
     cout << "Writing" << endl;
     cv::VideoWriter videoWriter(videoPath.string(), videoFourCC, fps, size);
