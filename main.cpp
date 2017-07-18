@@ -35,7 +35,7 @@ int main()
     
     const cv::Size size = cv::imread(imagePaths.front().string()).size();
 
-    cv::VideoWriter videoWriter(videoPath.string(), videoFourCC, fps, size);
+    vector<cv::Mat> frames;
 
     cv::Mat prevSum(size, CV_32SC3, cv::Scalar::all(0));
     size_t prevCount = 0;
@@ -64,12 +64,21 @@ int main()
 
         cv::Mat frame;
         frameSum.convertTo(frame, CV_8UC3, 1.0 / (prevCount + 1 + nextCount));
-        fs::path framePath = framesPath / (to_string(frameI) + ".jpg");
-        cv::imwrite(framePath.string(), frame);
-        videoWriter << frame;
+        frames.push_back(frame);
 
         prevSum = nextSum;
         prevCount = nextCount;
+    }
+
+    cv::VideoWriter videoWriter(videoPath.string(), videoFourCC, fps, size);
+    for (size_t frameI = 0; frameI < frameCount; frameI++)
+    {
+        const cv::Mat &frame = frames[frameI];
+
+        fs::path framePath = framesPath / (to_string(frameI) + ".jpg");
+        cv::imwrite(framePath.string(), frame);
+
+        videoWriter << frame;
     }
 
     return 0;
