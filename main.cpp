@@ -37,6 +37,7 @@ int main()
 
     vector<cv::Mat> frames;
 
+    cout << "Reading" << endl;
     cv::Mat prevSum(size, CV_32SC3, cv::Scalar::all(0));
     size_t prevCount = 0;
     for (size_t frameI = 0; frameI < frameCount; frameI++)
@@ -44,7 +45,7 @@ int main()
         const size_t frameImage = frameImages[frameI];
         const size_t nextFrameImage = frameI < frameCount - 1 ? frameImages[frameI + 1] : imageCount;
 
-        cout << "Frame " << frameI << ", Image: " << frameImage << endl;
+        cout << "Averaging, " << "Frame " << frameI << ", Image: " << frameImage << endl;
 
         cv::Mat image = cv::imread(imagePaths[frameImage].string());
 
@@ -52,7 +53,7 @@ int main()
         size_t nextCount = 0;
         for (size_t imageI = frameImage + 1; imageI < nextFrameImage; imageI++)
         {
-            cout << "  " << "Next image: " << imageI << endl;
+            //cout << "  " << "Next image: " << imageI << endl;
             cv::Mat nextImage = cv::imread(imagePaths[imageI].string());
             cv::add(nextSum, nextImage, nextSum, cv::noArray(), CV_32SC3);
             nextCount++;
@@ -70,6 +71,7 @@ int main()
         prevCount = nextCount;
     }
 
+    cout << "Writing" << endl;
     cv::VideoWriter videoWriter(videoPath.string(), videoFourCC, fps, size);
     for (size_t frameI = 0; frameI < frameCount; frameI++)
     {
