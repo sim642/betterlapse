@@ -17,6 +17,10 @@ int main()
     const double seconds = 15.0;
     const double fps = 30.0;
     const size_t frameCount = round(seconds * fps);
+    const double startSeconds = 0.5;
+    const size_t startFrameCount = round(startSeconds * fps);
+    const double endSeconds = 2.0;
+    const size_t endFrameCount = round(endSeconds * fps);
 
     const cv::Rect cropRect(cv::Point(140, 19), cv::Size(410, 410));
 
@@ -84,6 +88,10 @@ int main()
 
     cout << "Writing" << endl;
     cv::VideoWriter videoWriter(videoPath.string(), videoFourCC, fps, size);
+
+    for (size_t i = 0; i < startFrameCount; i++)
+        videoWriter << frames.front();
+
     for (size_t frameI = 0; frameI < frameCount; frameI++)
     {
         const cv::Mat &frame = frames[frameI];
@@ -93,6 +101,9 @@ int main()
 
         videoWriter << frame;
     }
+
+    for (size_t i = 0; i < endFrameCount; i++)
+        videoWriter << frames.back();
 
     return 0;
 }

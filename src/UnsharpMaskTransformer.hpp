@@ -12,8 +12,8 @@ protected:
     void doTransform(cv::Mat &frame) override;
 
     double sigma = 5;
-    double threshold = 3;
-    double amount = 1;
+    double threshold = 5;
+    double amount = 0.5;
 };
 
 
