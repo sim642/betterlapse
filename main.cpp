@@ -17,6 +17,8 @@ int main()
 
     const fs::path imagesPath("./tl2/");
     const fs::path framesPath("./frames/");
+    const fs::path videoPath("./out.avi");
+    const int videoFourCC = cv::VideoWriter::fourcc('H', '2', '6', '4');
     fs::create_directories(framesPath);
 
     vector<fs::path> imagePaths;
@@ -32,6 +34,8 @@ int main()
 
     
     const cv::Size size = cv::imread(imagePaths.front().string()).size();
+
+    cv::VideoWriter videoWriter(videoPath.string(), videoFourCC, fps, size);
 
     cv::Mat prevSum(size, CV_32SC3, cv::Scalar::all(0));
     size_t prevCount = 0;
@@ -62,6 +66,7 @@ int main()
         frameSum.convertTo(frame, CV_8UC3, 1.0 / (prevCount + 1 + nextCount));
         fs::path framePath = framesPath / (to_string(frameI) + ".jpg");
         cv::imwrite(framePath.string(), frame);
+        videoWriter << frame;
 
         prevSum = nextSum;
         prevCount = nextCount;
