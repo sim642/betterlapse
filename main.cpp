@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <iterator>
 #include <opencv2/opencv.hpp>
+#include <opencv2/xphoto.hpp>
 #include <cmath>
 
 using namespace std;
@@ -69,6 +70,15 @@ int main()
 
         prevSum = nextSum;
         prevCount = nextCount;
+    }
+
+    for (size_t frameI = 0; frameI < frameCount; frameI++)
+    {
+        cout << "White balancing, " << "Frame " << frameI << endl;
+        cv::Mat &frame = frames[frameI];
+
+        cv::Ptr<cv::xphoto::SimpleWB> whiteBalance = cv::xphoto::createSimpleWB();
+        whiteBalance->balanceWhite(frame, frame);
     }
 
     cout << "Writing" << endl;
