@@ -6,6 +6,7 @@
 #include <opencv2/opencv.hpp>
 #include <cmath>
 #include "WhiteBalanceTransformer.hpp"
+#include "UnsharpMaskTransformer.hpp"
 
 using namespace std;
 namespace fs = boost::filesystem;
@@ -46,7 +47,7 @@ int main()
         const size_t frameImage = frameImages[frameI];
         const size_t nextFrameImage = frameI < frameCount - 1 ? frameImages[frameI + 1] : imageCount;
 
-        cout << "Averaging, " << "Frame " << frameI << ", Image: " << frameImage << endl;
+        cout << "Averaging, " << "Frame: " << frameI << ", Image: " << frameImage << endl;
 
         cv::Mat image = cv::imread(imagePaths[frameImage].string());
 
@@ -72,6 +73,7 @@ int main()
         prevCount = nextCount;
     }
 
+    UnsharpMaskTransformer().transform(frames);
     WhiteBalanceTransformer().transform(frames);
 
     cout << "Writing" << endl;

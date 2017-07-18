@@ -1,7 +1,7 @@
 #include <opencv2/xphoto.hpp>
 #include "WhiteBalanceTransformer.hpp"
 
-WhiteBalanceTransformer::WhiteBalanceTransformer() : IndividualTransformer("White Balance")
+WhiteBalanceTransformer::WhiteBalanceTransformer() : IndividualTransformer("White balance")
 {
 
 }
